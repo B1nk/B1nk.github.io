@@ -251,7 +251,6 @@
             background: #fff8f5;
         }
 
-        /* 烟瘾统计图表：增加间距，避免数字和标题重叠 */
         .craving-stats {
             margin-top: 12px;
             padding: 20px 12px 12px;
@@ -276,7 +275,7 @@
             height: 80px;
             gap: 12px;
             padding: 0 4px;
-            margin-top: 8px;  /* 额外下移避免与顶部文字粘连 */
+            margin-top: 8px;
         }
         .bar-item {
             display: flex;
@@ -371,7 +370,6 @@
             gap: 8px;
             align-items: center;
         }
-        /* 打卡网格 - 星期一到星期日顺序，左到右 */
         .checkin-grid {
             display: flex;
             justify-content: space-between;
@@ -422,15 +420,6 @@
             box-shadow: none;
             cursor: not-allowed;
         }
-        .btn-checkin-reset {
-            padding: 8px 16px;
-            background: #fff;
-            border: 1px solid #e8ece9;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-        }
 
         .recovery-category {
             margin-bottom: 14px;
@@ -449,18 +438,10 @@
             height: 7px;
             border-radius: 50%;
         }
-        .cat-heart {
-            background: #f87171;
-        }
-        .cat-sensory {
-            background: #fb923c;
-        }
-        .cat-immune {
-            background: #60a5fa;
-        }
-        .cat-addiction {
-            background: #a78bfa;
-        }
+        .cat-heart { background: #f87171; }
+        .cat-sensory { background: #fb923c; }
+        .cat-immune { background: #60a5fa; }
+        .cat-addiction { background: #a78bfa; }
         .recovery-item {
             display: flex;
             align-items: center;
@@ -470,528 +451,609 @@
             margin-bottom: 6px;
             gap: 8px;
         }
-        .recovery-item.completed {
-            background: #f0fdf4;
-            border: 1px solid #d1f7df;
-        }
-        .item-info {
-            flex: 1;
-        }
-        .item-name {
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .item-desc {
-            font-size: 0.72rem;
-            color: var(--text-secondary);
-        }
-        .item-benefit {
-            font-size: 0.7rem;
-            color: var(--green-600);
+        .recovery-item.completed { background: #f0fdf4; border: 1px solid #d1f7df; }
+        .item-info { flex: 1; }
+        .item-name { font-size: 0.85rem; font-weight: 600; }
+        .item-desc { font-size: 0.72rem; color: var(--text-secondary); }
+        .item-benefit { font-size: 0.7rem; color: var(--green-600); display: flex; align-items: center; gap: 3px; }
+        .mini-progress-bar { width: 60px; height: 5px; background: #e8ece9; border-radius: 20px; overflow: hidden; }
+        .mini-progress-fill { height: 100%; background: #4ade80; }
+        .item-percent { font-size: 0.78rem; font-family: var(--font-mono); min-width: 42px; text-align: right; }
+        .empty-hint { text-align: center; padding: 10px 0; color: var(--text-muted); font-size: 0.82rem; }
+
+        /* 日历模态框 */
+        .modal-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
             display: flex;
             align-items: center;
-            gap: 3px;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(3px);
         }
-        .mini-progress-bar {
-            width: 60px;
-            height: 5px;
-            background: #e8ece9;
+        .calendar-modal {
+            background: white;
+            border-radius: 28px;
+            width: 90%;
+            max-width: 380px;
+            padding: 20px 16px 24px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .calendar-header button {
+            background: #f0f3f1;
+            border: none;
+            width: 36px;
+            height: 36px;
             border-radius: 20px;
-            overflow: hidden;
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-weight: bold;
         }
-        .mini-progress-fill {
-            height: 100%;
-            background: #4ade80;
-        }
-        .item-percent {
-            font-size: 0.78rem;
-            font-family: var(--font-mono);
-            min-width: 42px;
-            text-align: right;
-        }
-
-        .empty-hint {
-            text-align: center;
-            padding: 10px 0;
-            color: var(--text-muted);
-            font-size: 0.82rem;
-        }
-        /* 周提示小字 */
-        .week-hint {
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 8px;
             font-size: 0.7rem;
-            color: var(--text-muted);
-            text-align: center;
-            margin-top: 6px;
+            color: #8e9c92;
+            font-weight: 600;
+        }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+        }
+        .calendar-day {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            border-radius: 30px;
+            background: #f9faf9;
+            color: #2d3e2f;
+        }
+        .calendar-day.checked {
+            background: #4ade80;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(74,222,128,0.3);
+        }
+        .calendar-day.other-month {
+            color: #cbd5e1;
+            background: #fefefe;
+        }
+        .stats-summary {
+            margin-top: 18px;
+            padding-top: 12px;
+            border-top: 1px solid #eef2ef;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--green-700);
+            display: flex;
+            justify-content: space-between;
+        }
+        .close-calendar {
+            margin-top: 12px;
+            background: #e9ece9;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .stat-btn {
+            background: none;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        .stat-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 14px;
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <header class="app-header">
-            <h1>高斌的戒烟小帮手</h1>
-            <p style="color:#9aab9d;font-size:0.8rem;">记录每一步坚持，见证身体焕新</p>
-        </header>
+<div class="app-container">
+    <header class="app-header">
+        <h1>高斌的戒烟小帮手</h1>
+        <p style="color:#9aab9d;font-size:0.8rem;">记录每一步坚持，见证身体焕新</p>
+    </header>
 
-        <section class="card" id="module-timer">
-            <div class="card-header"><span class="dot dot-green"></span><h2>已坚持戒烟</h2></div>
-            <div class="timer-display" id="timer-display"></div>
-            <div class="overall-progress">
-                <div class="progress-header"><span>🌱 健康已恢复</span><span class="progress-percent" id="overall-percent">0%</span></div>
-                <div class="progress-bar-outer"><div class="progress-bar-inner" id="overall-progress-bar" style="width:0%"></div></div>
+    <section class="card" id="module-timer">
+        <div class="card-header"><span class="dot dot-green"></span><h2>已坚持戒烟</h2></div>
+        <div class="timer-display" id="timer-display"></div>
+        <div class="overall-progress">
+            <div class="progress-header"><span>🌱 健康已恢复</span><span class="progress-percent" id="overall-percent">0%</span></div>
+            <div class="progress-bar-outer"><div class="progress-bar-inner" id="overall-progress-bar" style="width:0%"></div></div>
+        </div>
+    </section>
+
+    <section class="card" id="module-craving">
+        <div class="card-header"><span class="dot dot-warm"></span><h2>烟瘾来袭</h2></div>
+        <div style="text-align:center; margin-bottom:14px;">
+            <span id="craving-total" style="font-family:var(--font-mono); font-size:2.8rem; font-weight:700; color:#e8783c;">0</span>
+            <div style="font-size:0.75rem; color:var(--text-secondary);">累计忍住次数</div>
+        </div>
+        <button class="btn-craving" id="btn-craving">+1 我忍住了</button>
+        <div class="reason-panel" id="reason-panel"></div>
+        <div class="craving-stats" id="craving-stats"></div>
+    </section>
+
+    <section class="card" id="module-checkin">
+        <div class="card-header"><span class="dot dot-purple"></span><h2>每天打卡</h2></div>
+        <div class="rank-header">
+            <div class="rank-left">
+                <div class="rank-badge" id="rank-name">新兵</div>
+                <div class="rank-next" id="rank-next-msg">再坚持打卡 7 天升级至 班长</div>
             </div>
-        </section>
-
-        <section class="card" id="module-craving">
-            <div class="card-header"><span class="dot dot-warm"></span><h2>烟瘾来袭</h2></div>
-            <div style="text-align:center; margin-bottom:14px;">
-                <span id="craving-total" style="font-family:var(--font-mono); font-size:2.8rem; font-weight:700; color:#e8783c;">0</span>
-                <div style="font-size:0.75rem; color:var(--text-secondary);">累计忍住次数</div>
+            <div class="checkin-actions">
+                <button class="btn-checkin" id="btn-checkin">打卡</button>
             </div>
-            <button class="btn-craving" id="btn-craving">+1 我忍住了</button>
-            <div class="reason-panel" id="reason-panel"></div>
-            <div class="craving-stats" id="craving-stats"></div>
-        </section>
+        </div>
+        <div class="checkin-grid" id="checkin-grid"></div>
+        <div class="stat-footer">
+            <button class="stat-btn" id="stats-calendar-btn">📆 打卡统计</button>
+        </div>
+    </section>
 
-        <section class="card" id="module-checkin">
-            <div class="card-header"><span class="dot dot-purple"></span><h2>本周打卡 · 坚持勋章</h2></div>
-            <div class="rank-header">
-                <div class="rank-left">
-                    <div class="rank-badge" id="rank-name">新兵</div>
-                    <div class="rank-next" id="rank-next-msg">再坚持打卡 7 天升级至 班长</div>
+    <section class="card" id="module-savings">
+        <div class="card-header"><span class="dot dot-gold"></span><h2>戒烟收益</h2></div>
+        <div id="savings-content"></div>
+    </section>
+
+    <section class="card" id="module-recovery">
+        <div class="card-header"><span class="dot dot-teal"></span><h2>身体恢复</h2></div>
+        <div id="recovery-list"></div>
+    </section>
+</div>
+
+<script>
+(function() {
+    const get = (k, d = null) => { try { let v = localStorage.getItem(k); return v === null ? d : v; } catch { return d; } };
+    const set = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
+    const remove = (k) => { try { localStorage.removeItem(k); } catch {} };
+
+    // 恢复明细数据 - 重新组织，每个项目包含主名称和对应的益处描述（小字）
+    // 为了满足新的排版：主名称下方显示益处描述 + 进度百分比的文字
+    const recoveryItems = [
+        { name: '血液中一氧化碳和氧气恢复正常水平', category: '心肺血液', maxDays: 1, benefitDesc: '血液携氧能力恢复' },
+        { name: '心肌梗塞危险性降低', category: '心肺血液', maxDays: 1, benefitDesc: '心脏负担减轻' },
+        { name: '血液循环改善，肺功能增加三成', category: '心肺血液', maxDays: 30, benefitDesc: '肺功能提升约30%' },
+        { name: '冠心病的危险下降一半', category: '心肺血液', maxDays: 365, benefitDesc: '冠心病危险降至一半' },
+        { name: '肺癌发病率降至非吸烟者的水平', category: '心肺血液', maxDays: 1825, benefitDesc: '肺部健康恢复' },
+        { name: '冠心病的危险降至非吸烟者的水平', category: '心肺血液', maxDays: 1825, benefitDesc: '心脏健康恢复' },
+        { name: '嗅觉和味觉恢复正常', category: '五官皮肤', maxDays: 2, benefitDesc: '食物更美味' },
+        { name: '皮肤老化速度恢复正常', category: '五官皮肤', maxDays: 30, benefitDesc: '状态更年轻' },
+        { name: '免疫力增强', category: '免疫力', maxDays: 120, benefitDesc: '抵抗力提升' },
+        { name: '生理烟瘾基本消除', category: '戒烟综合症', maxDays: 30, benefitDesc: '尼古丁依赖消退' },
+        { name: '心理烟瘾基本消除', category: '戒烟综合症', maxDays: 180, benefitDesc: '重获自控' }
+    ];
+    const catConfig = {
+        '心肺血液': { order: 1, dot: 'cat-heart', title: '心肺、血液功能' },
+        '五官皮肤': { order: 2, dot: 'cat-sensory', title: '五官、皮肤' },
+        '免疫力': { order: 3, dot: 'cat-immune', title: '免疫力' },
+        '戒烟综合症': { order: 4, dot: 'cat-addiction', title: '戒烟综合症' }
+    };
+    const RANKS = [
+        { name: '新兵', days: 0 }, { name: '班长', days: 7 }, { name: '排长', days: 30 },
+        { name: '连长', days: 90 }, { name: '营长', days: 180 }, { name: '团长', days: 365 },
+        { name: '旅长', days: 500 }, { name: '师长', days: 730 }, { name: '军长', days: 1000 }, { name: '司令', days: 1500 }
+    ];
+    const ALL_REASONS = ['早起', '吃饭', '厕所', '焦虑', '无聊', '电脑', '社交'];
+    const BAR_COLORS = ['#ef4444','#f97316','#f59e0b','#eab308','#84cc16','#22c55e','#06b6d4'];
+
+    let lastSmoke = null, cravingTotal = 0, cravingLogs = [], checkinDates = [];
+    let params = { daily: 20, packPrice: 20, packSize: 20, tar: 10 };
+    let timer = null;
+
+    function loadState() {
+        const ts = get('lastSmokeTimestamp');
+        lastSmoke = (ts && !isNaN(parseInt(ts))) ? parseInt(ts) : null;
+        cravingTotal = parseInt(get('cravingTotal', '0')) || 0;
+        try { cravingLogs = JSON.parse(get('cravingLogs', '[]')); } catch { cravingLogs = []; }
+        try { checkinDates = JSON.parse(get('checkinDates', '[]')); } catch { checkinDates = []; }
+        try { const p = JSON.parse(get('smokingParams', '{}')); params = { ...params, ...p }; } catch {}
+        normalizeCheckinDates();
+    }
+    function saveAll() {
+        if (lastSmoke) set('lastSmokeTimestamp', lastSmoke.toString());
+        else remove('lastSmokeTimestamp');
+        set('cravingTotal', cravingTotal.toString());
+        set('cravingLogs', JSON.stringify(cravingLogs));
+        set('checkinDates', JSON.stringify(checkinDates));
+        set('smokingParams', JSON.stringify(params));
+    }
+    function normalizeCheckinDates() { 
+        if (!Array.isArray(checkinDates)) checkinDates = [];
+        checkinDates = [...new Set(checkinDates)].sort();
+        saveAll();
+    }
+
+    function toYMD(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+    
+    function getWeekDays() {
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const dayOfWeek = today.getDay();
+        const mondayOffset = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
+        const monday = new Date(today);
+        monday.setDate(today.getDate() - mondayOffset);
+        const days = [];
+        for (let i=0;i<7;i++) {
+            const d = new Date(monday);
+            d.setDate(monday.getDate() + i);
+            days.push({ dateStr: toYMD(d), label: ['周一','周二','周三','周四','周五','周六','周日'][i], fullDate: d, weekIndex: i });
+        }
+        return days;
+    }
+    
+    function enforceCurrentWeekMandatory() {
+        if (!lastSmoke) return;
+        const weekDays = getWeekDays();
+        const todayStr = toYMD(new Date());
+        let added = false;
+        for (let i=0; i<3; i++) {
+            const day = weekDays[i];
+            if (day.dateStr <= todayStr && !checkinDates.includes(day.dateStr)) {
+                checkinDates.push(day.dateStr);
+                added = true;
+            }
+        }
+        if (added) normalizeCheckinDates();
+    }
+
+    function quitDays() { return lastSmoke ? Math.max(0, (Date.now() - lastSmoke) / 86400000) : 0; }
+    function recoveryData() {
+        const days = quitDays();
+        const items = recoveryItems.map(it => {
+            const p = Math.min(100, (days / it.maxDays) * 100);
+            return { ...it, percent: p, completed: p >= 99.995, display: p >= 99.995 ? 100 : p };
+        });
+        return { items, overall: items.reduce((s, i) => s + i.display, 0) / items.length };
+    }
+    function formatTimer(sec) {
+        const d = Math.floor(sec / 86400), h = Math.floor((sec % 86400) / 3600), m = Math.floor((sec % 3600) / 60), s = Math.floor(sec % 60);
+        return { days: d, h: String(h).padStart(2,'0'), m: String(m).padStart(2,'0'), s: String(s).padStart(2,'0') };
+    }
+    function savingsCalc() {
+        const days = quitDays();
+        const cigs = Math.floor(days * params.daily);
+        const cost = Math.round(cigs * params.packPrice / params.packSize).toString();
+        const tar = (cigs * params.tar).toFixed(0);
+        const lifeMin = cigs * 11;
+        const lifeDays = Math.floor((lifeMin * 60) / 86400);
+        return { cigs, cost, tar, lifeDays };
+    }
+    function getRankInfo(totalCheckins) {
+        let current = RANKS[0], next = null;
+        for (let i = RANKS.length-1; i>=0; i--) {
+            if (totalCheckins >= RANKS[i].days) { current = RANKS[i]; next = RANKS[i+1] || null; break; }
+        }
+        return { current, next, remaining: next ? next.days - totalCheckins : 0 };
+    }
+    function getReasonStats() {
+        const stats = Object.fromEntries(ALL_REASONS.map(r=>[r,0]));
+        cravingLogs.forEach(log => { if(log.reason && stats.hasOwnProperty(log.reason)) stats[log.reason]++; });
+        return stats;
+    }
+
+    function renderCheckin() {
+        enforceCurrentWeekMandatory();
+        const weekDays = getWeekDays();
+        const totalCheckins = checkinDates.length;
+        const rankInfo = getRankInfo(totalCheckins);
+        document.getElementById('rank-name').innerText = rankInfo.current.name;
+        document.getElementById('rank-next-msg').innerText = rankInfo.next ? `再坚持打卡 ${rankInfo.remaining} 天升级至 ${rankInfo.next.name}` : '🎉 已达最高军衔，继续坚持！';
+        
+        const todayStr = toYMD(new Date());
+        const todayObj = weekDays.find(d => d.dateStr === todayStr);
+        const hasCheckedToday = checkinDates.includes(todayStr);
+        const btn = document.getElementById('btn-checkin');
+        let canCheckin = lastSmoke && todayObj && !hasCheckedToday && todayObj.weekIndex >= 3;
+        btn.disabled = !canCheckin;
+        btn.innerText = hasCheckedToday ? '已打卡 ✓' : '打卡';
+        
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        newBtn.onclick = () => {
+            if (!lastSmoke) { alert('请先开始戒烟'); return; }
+            if (!todayObj) { alert('今日不在当前周范围'); return; }
+            if (checkinDates.includes(todayStr)) { alert('今日已打卡'); return; }
+            if (todayObj.weekIndex < 3) { alert('周一至周三已自动打卡，无需重复'); return; }
+            const startDate = new Date(lastSmoke); startDate.setHours(0,0,0,0);
+            const checkDate = new Date(todayStr);
+            if (checkDate < startDate) { alert('不能打卡戒烟开始之前的日期'); return; }
+            checkinDates.push(todayStr);
+            normalizeCheckinDates();
+            renderAll();
+        };
+        
+        const grid = document.getElementById('checkin-grid');
+        grid.innerHTML = '';
+        weekDays.forEach(day => {
+            const isChecked = checkinDates.includes(day.dateStr);
+            const dayNumber = day.fullDate.getDate();
+            const circleDiv = document.createElement('div');
+            circleDiv.className = 'checkin-day';
+            circleDiv.innerHTML = `<div class="checkin-circle ${isChecked ? 'checked' : ''}">${isChecked ? '✓' : dayNumber}</div><span class="checkin-label">${day.label}</span>`;
+            grid.appendChild(circleDiv);
+        });
+    }
+
+    let currentCalendarYear = new Date().getFullYear();
+    let currentCalendarMonth = new Date().getMonth();
+    function showCalendarModal() {
+        const modalDiv = document.createElement('div');
+        modalDiv.className = 'modal-mask';
+        modalDiv.innerHTML = `
+            <div class="calendar-modal">
+                <div class="calendar-header">
+                    <button id="cal-prev">◀</button>
+                    <span id="cal-year-month"></span>
+                    <button id="cal-next">▶</button>
                 </div>
-                <div class="checkin-actions">
-                    <button class="btn-checkin-reset" id="btn-checkin-reset">↺ 重置</button>
-                    <button class="btn-checkin" id="btn-checkin">✅ 今日打卡</button>
-                </div>
+                <div class="calendar-weekdays"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+                <div class="calendar-days" id="cal-days-grid"></div>
+                <div class="stats-summary" id="cal-summary"></div>
+                <button class="close-calendar">关闭</button>
             </div>
-            <div class="checkin-grid" id="checkin-grid"></div>
-            <div class="week-hint" id="week-hint">📅 每周从左至右：周一 → 周日</div>
-        </section>
-
-        <section class="card" id="module-savings">
-            <div class="card-header"><span class="dot dot-gold"></span><h2>戒烟收益</h2></div>
-            <div id="savings-content"></div>
-        </section>
-
-        <section class="card" id="module-recovery">
-            <div class="card-header"><span class="dot dot-teal"></span><h2>恢复明细</h2></div>
-            <div id="recovery-list"></div>
-        </section>
-    </div>
-
-    <script>
-        (function() {
-            const get = (k, d = null) => { try { let v = localStorage.getItem(k); return v === null ? d : v; } catch { return d; } };
-            const set = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
-            const remove = (k) => { try { localStorage.removeItem(k); } catch {} };
-
-            const recoveryItems = [
-                { name: '血液中一氧化碳和氧气恢复正常水平', category: '心肺血液', maxDays: 1, desc: '血液一氧化碳和氧气水平恢复正常', benefit: '血液携氧能力恢复' },
-                { name: '心肌梗塞危险性降低', category: '心肺血液', maxDays: 1, desc: '心肌梗塞危险性开始降低', benefit: '心脏负担减轻' },
-                { name: '血液循环改善，肺功能增加三成', category: '心肺血液', maxDays: 30, desc: '肺功能提升约30%', benefit: '呼吸更顺畅' },
-                { name: '冠心病的危险下降一半', category: '心肺血液', maxDays: 365, desc: '冠心病危险降至一半', benefit: '心血管风险降低' },
-                { name: '肺癌发病率降至非吸烟者的水平', category: '心肺血液', maxDays: 1825, desc: '肺癌发病率正常化', benefit: '肺部健康恢复' },
-                { name: '冠心病的危险降至非吸烟者的水平', category: '心肺血液', maxDays: 1825, desc: '冠心病危险正常化', benefit: '心脏健康恢复' },
-                { name: '嗅觉和味觉恢复正常', category: '五官皮肤', maxDays: 2, desc: '嗅觉味觉神经修复', benefit: '食物更美味' },
-                { name: '皮肤老化速度恢复正常', category: '五官皮肤', maxDays: 30, desc: '皮肤修复功能增强', benefit: '状态更年轻' },
-                { name: '免疫力增强', category: '免疫力', maxDays: 120, desc: '免疫系统增强', benefit: '抵抗力提升' },
-                { name: '生理烟瘾基本消除', category: '戒烟综合症', maxDays: 30, desc: '尼古丁依赖消退', benefit: '身心自由' },
-                { name: '心理烟瘾基本消除', category: '戒烟综合症', maxDays: 180, desc: '心理渴望淡化', benefit: '重获自控' }
-            ];
-            const catConfig = {
-                '心肺血液': { order: 1, dot: 'cat-heart', title: '心肺、血液功能' },
-                '五官皮肤': { order: 2, dot: 'cat-sensory', title: '五官、皮肤' },
-                '免疫力': { order: 3, dot: 'cat-immune', title: '免疫力' },
-                '戒烟综合症': { order: 4, dot: 'cat-addiction', title: '戒烟综合症' }
-            };
-
-            const RANKS = [
-                { name: '新兵', days: 0 }, { name: '班长', days: 7 }, { name: '排长', days: 30 },
-                { name: '连长', days: 90 }, { name: '营长', days: 180 }, { name: '团长', days: 365 },
-                { name: '旅长', days: 500 }, { name: '师长', days: 730 }, { name: '军长', days: 1000 },
-                { name: '司令', days: 1500 }
-            ];
-
-            const ALL_REASONS = ['早起', '吃饭', '厕所', '焦虑', '无聊', '电脑', '社交'];
-            const BAR_COLORS = ['#ef4444','#f97316','#f59e0b','#eab308','#84cc16','#22c55e','#06b6d4'];
-
-            let lastSmoke = null,
-                cravingTotal = 0,
-                cravingLogs = [],
-                checkinDates = [];      // 存储 YYYY-MM-DD 打卡日期
-            let params = { daily: 20, packPrice: 20, packSize: 20, tar: 10 };
-            let timer = null;
-
-            function loadState() {
-                const ts = get('lastSmokeTimestamp');
-                lastSmoke = (ts && !isNaN(parseInt(ts))) ? parseInt(ts) : null;
-                cravingTotal = parseInt(get('cravingTotal', '0')) || 0;
-                try { cravingLogs = JSON.parse(get('cravingLogs', '[]')); } catch { cravingLogs = []; }
-                try { checkinDates = JSON.parse(get('checkinDates', '[]')); } catch { checkinDates = []; }
-                try { const p = JSON.parse(get('smokingParams', '{}'));
-                    params = { ...params, ...p }; } catch {}
-                normalizeCheckinDates();
+        `;
+        document.body.appendChild(modalDiv);
+        function renderCalendar() {
+            const year = currentCalendarYear, month = currentCalendarMonth;
+            const firstDay = new Date(year, month, 1);
+            let startWeekday = firstDay.getDay();
+            startWeekday = startWeekday === 0 ? 6 : startWeekday - 1;
+            const daysInMonth = new Date(year, month+1, 0).getDate();
+            const prevMonthDays = new Date(year, month, 0).getDate();
+            const calendarCells = [];
+            for (let i=0; i<startWeekday; i++) {
+                const dateNum = prevMonthDays - startWeekday + i + 1;
+                calendarCells.push({ date: dateNum, isCurrent: false, fullDate: null });
             }
-
-            function saveAll() {
-                if (lastSmoke) set('lastSmokeTimestamp', lastSmoke.toString());
-                else remove('lastSmokeTimestamp');
-                set('cravingTotal', cravingTotal.toString());
-                set('cravingLogs', JSON.stringify(cravingLogs));
-                set('checkinDates', JSON.stringify(checkinDates));
-                set('smokingParams', JSON.stringify(params));
+            for (let d=1; d<=daysInMonth; d++) {
+                const fullDateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                calendarCells.push({ date: d, isCurrent: true, fullDate: fullDateStr });
             }
-
-            function normalizeCheckinDates() {
-                if (!Array.isArray(checkinDates)) checkinDates = [];
-                const unique = [...new Set(checkinDates)];
-                unique.sort();
-                checkinDates = unique;
-                saveAll();
+            const totalCells = Math.ceil(calendarCells.length / 7) * 7;
+            while(calendarCells.length < totalCells) {
+                const nextMonthDay = calendarCells.length - (daysInMonth+startWeekday) + 1;
+                calendarCells.push({ date: nextMonthDay, isCurrent: false, fullDate: null });
             }
-
-            function quitDays() { return lastSmoke ? Math.max(0, (Date.now() - lastSmoke) / 86400000) : 0; }
-
-            function recoveryData() {
-                const days = quitDays();
-                const items = recoveryItems.map(it => {
-                    const p = Math.min(100, (days / it.maxDays) * 100);
-                    return { ...it, percent: p, completed: p >= 99.995, display: p >= 99.995 ? 100 : p };
-                });
-                return { items, overall: items.reduce((s, i) => s + i.display, 0) / items.length };
-            }
-
-            function formatTimer(sec) {
-                const d = Math.floor(sec / 86400),
-                    h = Math.floor((sec % 86400) / 3600),
-                    m = Math.floor((sec % 3600) / 60),
-                    s = Math.floor(sec % 60);
-                return { days: d, h: ('' + h).padStart(2, '0'), m: ('' + m).padStart(2, '0'), s: ('' + s).padStart(2, '0') };
-            }
-
-            function savingsCalc() {
-                const days = quitDays();
-                const cigs = Math.floor(days * params.daily);
-                const cost = Math.round(cigs * params.packPrice / params.packSize).toString();
-                const tar = (cigs * params.tar).toFixed(0);
-                const lifeMin = cigs * 11;
-                const lifeDays = Math.floor((lifeMin * 60) / 86400);
-                return { cigs, cost, tar, lifeDays };
-            }
-
-            function getRankInfo(totalCheckins) {
-                let current = RANKS[0], next = null;
-                for (let i = RANKS.length - 1; i >= 0; i--) {
-                    if (totalCheckins >= RANKS[i].days) {
-                        current = RANKS[i];
-                        next = RANKS[i + 1] || null;
-                        break;
-                    }
+            const daysGrid = modalDiv.querySelector('#cal-days-grid');
+            daysGrid.innerHTML = '';
+            let checkedCount = 0;
+            calendarCells.forEach(cell => {
+                const div = document.createElement('div');
+                div.className = 'calendar-day';
+                if (!cell.isCurrent) div.classList.add('other-month');
+                if (cell.isCurrent && checkinDates.includes(cell.fullDate)) {
+                    div.classList.add('checked');
+                    checkedCount++;
                 }
-                return { current, next, remaining: next ? next.days - totalCheckins : 0 };
-            }
-
-            function getReasonStats() {
-                const stats = {};
-                ALL_REASONS.forEach(r => { stats[r] = 0; });
-                cravingLogs.forEach(log => {
-                    if (log.reason && stats.hasOwnProperty(log.reason)) stats[log.reason]++;
-                });
-                return stats;
-            }
-
-            // 获取当前周的周一到周日日期数组 (基于周一为一周开始)
-            function getWeekDays() {
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const dayOfWeek = today.getDay(); // 0周日 ~6周六
-                // 计算本周一: 若dayOfWeek === 0 (周日) 则周一为 today-6天，否则周一为 today - (dayOfWeek-1)
-                let mondayOffset;
-                if (dayOfWeek === 0) mondayOffset = 6;
-                else mondayOffset = dayOfWeek - 1;
-                const monday = new Date(today);
-                monday.setDate(today.getDate() - mondayOffset);
-                const weekDays = [];
-                for (let i = 0; i < 7; i++) {
-                    const d = new Date(monday);
-                    d.setDate(monday.getDate() + i);
-                    const dateStr = d.toISOString().split('T')[0];
-                    const weekDayName = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'][i];
-                    weekDays.push({ dateStr, label: weekDayName, fullDate: d });
-                }
-                return weekDays;
-            }
-
-            // 核心打卡渲染：周一到周日顺序
-            function renderCheckin() {
-                const weekDays = getWeekDays();
-                const totalCheckins = checkinDates.length;
-                const rankInfo = getRankInfo(totalCheckins);
-                document.getElementById('rank-name').textContent = rankInfo.current.name;
-                document.getElementById('rank-next-msg').textContent = rankInfo.next ?
-                    `再坚持打卡 ${rankInfo.remaining} 天升级至 ${rankInfo.next.name}` :
-                    '🎉 已达最高军衔，继续坚持！';
-                
-                const todayStr = new Date().toISOString().split('T')[0];
-                const todayInWeek = weekDays.some(day => day.dateStr === todayStr);
-                const hasCheckedToday = checkinDates.includes(todayStr);
-                const btn = document.getElementById('btn-checkin');
-                btn.textContent = hasCheckedToday ? '今日已打卡 ✓' : '✅ 今日打卡';
-                btn.disabled = hasCheckedToday || !lastSmoke || !todayInWeek;
-                btn.onclick = () => {
-                    if (!lastSmoke) {
-                        alert('请先开始戒烟（点击“我刚刚抽了一支烟”或手动设置起始时间）');
-                        return;
-                    }
-                    if (!todayInWeek) {
-                        alert('今日不在当前周范围内，请刷新页面重试');
-                        return;
-                    }
-                    if (!checkinDates.includes(todayStr)) {
-                        // 不能打卡戒烟开始之前的日期
-                        const startDate = new Date(lastSmoke);
-                        startDate.setHours(0,0,0,0);
-                        const checkDate = new Date(todayStr);
-                        if (checkDate < startDate) {
-                            alert('不能打卡戒烟开始之前的日期，请先正确设置戒烟起始时间');
-                            return;
-                        }
-                        checkinDates.push(todayStr);
-                        normalizeCheckinDates();
-                        renderCheckin();    // 刷新网格和等级
-                        renderAll();         // 同步其他模块
-                    } else {
-                        renderCheckin();
-                    }
-                };
-
-                // 构建网格 周一至周日
-                const grid = document.getElementById('checkin-grid');
-                grid.innerHTML = '';
-                weekDays.forEach(day => {
-                    const isChecked = checkinDates.includes(day.dateStr);
-                    const circleDiv = document.createElement('div');
-                    circleDiv.className = 'checkin-day';
-                    // 显示日期数字 (几号)
-                    const dayNumber = day.fullDate.getDate();
-                    circleDiv.innerHTML = `
-                        <div class="checkin-circle ${isChecked ? 'checked' : ''}">
-                            ${isChecked ? '✓' : dayNumber}
-                        </div>
-                        <span class="checkin-label">${day.label}</span>
-                    `;
-                    grid.appendChild(circleDiv);
-                });
-            }
-
-            function renderTimer() {
-                const el = document.getElementById('timer-display');
-                if (!lastSmoke) {
-                    el.innerHTML = `<button class="btn-primary" id="btn-start">🚬 我刚刚抽了一支烟</button>
-                    <div style="margin-top:8px;"><button class="btn-set-time" id="btn-show-setter">📅 手动设置起始时间</button></div>
-                    <div id="setter-container" style="display:none;"></div>`;
-                    document.getElementById('btn-start').onclick = () => { 
-                        lastSmoke = Date.now();
-                        saveAll();
-                        renderAll();
-                        startTimer();
-                    };
-                    document.getElementById('btn-show-setter').onclick = toggleSetter;
-                } else {
-                    const f = formatTimer(Math.max(0, Date.now() - lastSmoke) / 1000);
-                    el.innerHTML = `<div class="timer-digits"><span class="days-part">${f.days}天</span> ${f.h}:${f.m}:${f.s}</div>
-                    <p class="timer-label">距离最后一次抽烟已过去</p>
-                    <button class="btn-reset" id="btn-reset">重新记录</button>
-                    <button class="btn-set-time" id="btn-show-setter">📅 手动调整时间</button>
-                    <div id="setter-container" style="display:none;"></div>`;
-                    document.getElementById('btn-reset').onclick = () => { 
-                        lastSmoke = null;
-                        remove('lastSmokeTimestamp');
-                        stopTimer();
-                        renderAll();
-                    };
-                    document.getElementById('btn-show-setter').onclick = toggleSetter;
-                }
-                const overallData = recoveryData();
-                document.getElementById('overall-percent').textContent = overallData.overall.toFixed(1) + '%';
-                document.getElementById('overall-progress-bar').style.width = overallData.overall.toFixed(1) + '%';
-            }
-
-            function toggleSetter() {
-                const cont = document.getElementById('setter-container');
-                if (!cont) return;
-                if (cont.style.display === 'block') { cont.style.display = 'none'; return; }
-                const now = new Date();
-                const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-                cont.innerHTML = `<div class="time-setter">
-                    <input type="datetime-local" id="time-input" value="${local}" max="${local}">
-                    <button class="btn-confirm" id="confirm-set">确认</button>
-                    <button class="btn-cancel" id="cancel-set">取消</button></div>`;
-                cont.style.display = 'block';
-                document.getElementById('confirm-set').onclick = () => {
-                    const inp = document.getElementById('time-input');
-                    if (inp && inp.value) {
-                        const ts = new Date(inp.value).getTime();
-                        if (!isNaN(ts) && ts <= Date.now()) { 
-                            lastSmoke = ts;
-                            saveAll();
-                            stopTimer();
-                            renderAll();
-                            startTimer();
-                        } else alert('请选择有效的过去时间');
-                    }
-                    cont.style.display = 'none';
-                };
-                document.getElementById('cancel-set').onclick = () => cont.style.display = 'none';
-            }
-
-            function renderCraving() {
-                document.getElementById('craving-total').textContent = cravingTotal;
-                const stats = getReasonStats();
-                const panel = document.getElementById('reason-panel');
-                panel.innerHTML = '';
-                ALL_REASONS.forEach(r => {
-                    const count = stats[r] || 0;
-                    const chip = document.createElement('span');
-                    chip.className = 'reason-chip' + (count > 0 ? ' has-count' : '');
-                    chip.innerHTML = r + (count > 0 ? `<span class="chip-count">${count}</span>` : '');
-                    chip.onclick = () => recordWithReason(r);
-                    panel.appendChild(chip);
-                });
-                const skip = document.createElement('button');
-                skip.className = 'btn-cancel';
-                skip.textContent = '跳过';
-                skip.onclick = () => recordWithReason('');
-                panel.appendChild(skip);
-                panel.style.display = 'none';
-
-                const statsEl = document.getElementById('craving-stats');
-                const totalWithReason = Object.values(stats).reduce((s, v) => s + v, 0);
-                if (totalWithReason > 0) {
-                    const sorted = Object.entries(stats).filter(([, v]) => v > 0).sort(([, a], [, b]) => b - a);
-                    const maxCount = sorted[0][1];
-                    let html = '<div class="stats-header">📊 烟瘾触发统计（次数从高到低）</div><div class="bar-chart-container">';
-                    sorted.forEach(([reason, count], idx) => {
-                        const height = Math.max(14, (count / maxCount) * 70);
-                        const color = BAR_COLORS[idx % BAR_COLORS.length];
-                        html += `<div class="bar-item">
-                                    <div class="bar-count">${count}</div>
-                                    <div class="bar" style="height: ${height}px; background:${color};"></div>
-                                    <div class="bar-label">${reason}</div>
-                                </div>`;
-                    });
-                    html += '</div>';
-                    statsEl.innerHTML = html;
-                } else {
-                    statsEl.innerHTML = '<div class="no-stats">📊 暂无触发统计，点击上方按钮记录吧</div>';
-                }
-            }
-
-            function recordWithReason(reason) {
-                cravingTotal++;
-                cravingLogs.push({ ts: Date.now(), reason });
-                saveAll();
-                renderCraving();
-                document.getElementById('reason-panel').style.display = 'none';
-            }
-            document.getElementById('btn-craving').addEventListener('click', () => {
-                document.getElementById('reason-panel').style.display = 'flex';
+                div.textContent = cell.date;
+                daysGrid.appendChild(div);
             });
+            const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+            modalDiv.querySelector('#cal-year-month').innerText = `${year}年 ${monthNames[month]}`;
+            modalDiv.querySelector('#cal-summary').innerHTML = `<span>📅 本月打卡: ${checkedCount}天</span><span>🏅 总打卡: ${checkinDates.length}天</span>`;
+        }
+        renderCalendar();
+        modalDiv.querySelector('#cal-prev').onclick = () => {
+            let newMonth = currentCalendarMonth - 1;
+            let newYear = currentCalendarYear;
+            if (newMonth < 0) { newMonth = 11; newYear--; }
+            currentCalendarYear = newYear; currentCalendarMonth = newMonth;
+            renderCalendar();
+        };
+        modalDiv.querySelector('#cal-next').onclick = () => {
+            let newMonth = currentCalendarMonth + 1;
+            let newYear = currentCalendarYear;
+            if (newMonth > 11) { newMonth = 0; newYear++; }
+            currentCalendarYear = newYear; currentCalendarMonth = newMonth;
+            renderCalendar();
+        };
+        modalDiv.querySelector('.close-calendar').onclick = () => modalDiv.remove();
+        modalDiv.onclick = (e) => { if(e.target === modalDiv) modalDiv.remove(); };
+    }
 
-            function renderSavings() {
-                const cont = document.getElementById('savings-content');
-                if (!lastSmoke) { cont.innerHTML = '<div class="empty-hint">⏳ 开始戒烟后，这里将显示您省下的金钱与健康</div>'; return; }
-                const s = savingsCalc();
-                cont.innerHTML = `<div class="savings-stats">
-                    <div class="savings-item"><div class="savings-value">${s.cigs}</div><div class="savings-label">少吸香烟（支）</div></div>
-                    <div class="savings-item"><div class="savings-value">¥ ${s.cost}</div><div class="savings-label">节省金额（元）</div></div>
-                    <div class="savings-item"><div class="savings-value">${s.tar}</div><div class="savings-label">少吸焦油（mg）</div></div>
-                    <div class="savings-item"><div class="savings-value">${s.lifeDays}</div><div class="savings-label">延长寿命（天）</div></div>
-                </div><button class="btn-settings" id="btn-params">⚙️ 自定义吸烟数据</button>`;
-                document.getElementById('btn-params').onclick = showParamsDialog;
+    function renderTimer() {
+        const el = document.getElementById('timer-display');
+        if (!lastSmoke) {
+            el.innerHTML = `<button class="btn-primary" id="btn-start">🚬 我刚刚抽了一支烟</button>
+            <div style="margin-top:8px;"><button class="btn-set-time" id="btn-show-setter">📅 手动设置起始时间</button></div>
+            <div id="setter-container" style="display:none;"></div>`;
+            document.getElementById('btn-start').onclick = () => { lastSmoke = Date.now(); saveAll(); renderAll(); startTimer(); };
+            document.getElementById('btn-show-setter').onclick = toggleSetter;
+        } else {
+            const f = formatTimer(Math.max(0, Date.now() - lastSmoke) / 1000);
+            el.innerHTML = `<div class="timer-digits"><span class="days-part">${f.days}天</span> ${f.h}:${f.m}:${f.s}</div>
+            <p class="timer-label">距离最后一次抽烟已过去</p>
+            <button class="btn-reset" id="btn-reset">重新记录</button>
+            <button class="btn-set-time" id="btn-show-setter">📅 手动调整时间</button>
+            <div id="setter-container" style="display:none;"></div>`;
+            document.getElementById('btn-reset').onclick = () => { lastSmoke = null; remove('lastSmokeTimestamp'); stopTimer(); renderAll(); };
+            document.getElementById('btn-show-setter').onclick = toggleSetter;
+        }
+        const overallData = recoveryData();
+        document.getElementById('overall-percent').innerText = overallData.overall.toFixed(1)+'%';
+        document.getElementById('overall-progress-bar').style.width = overallData.overall.toFixed(1)+'%';
+    }
+    function toggleSetter() {
+        const cont = document.getElementById('setter-container');
+        if (!cont) return;
+        if (cont.style.display === 'block') { cont.style.display = 'none'; return; }
+        const now = new Date();
+        const local = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().slice(0,16);
+        cont.innerHTML = `<div class="time-setter"><input type="datetime-local" id="time-input" value="${local}" max="${local}"><button class="btn-confirm" id="confirm-set">确认</button><button class="btn-cancel" id="cancel-set">取消</button></div>`;
+        cont.style.display = 'block';
+        document.getElementById('confirm-set').onclick = () => {
+            const inp = document.getElementById('time-input');
+            if(inp && inp.value) {
+                const ts = new Date(inp.value).getTime();
+                if(!isNaN(ts) && ts <= Date.now()) { lastSmoke = ts; saveAll(); stopTimer(); renderAll(); startTimer(); }
+                else alert('请选择有效的过去时间');
             }
-
-            function showParamsDialog() {
-                let val = prompt('每天吸几支？', params.daily);
-                if (val && !isNaN(parseInt(val)) && parseInt(val) > 0) params.daily = parseInt(val);
-                val = prompt('每包价格（元）？', params.packPrice);
-                if (val && !isNaN(parseFloat(val)) && parseFloat(val) > 0) params.packPrice = parseFloat(val);
-                val = prompt('每包支数？', params.packSize);
-                if (val && !isNaN(parseInt(val)) && parseInt(val) > 0) params.packSize = parseInt(val);
-                val = prompt('每支焦油（mg）？', params.tar);
-                if (val && !isNaN(parseFloat(val)) && parseFloat(val) >= 0) params.tar = parseFloat(val);
-                saveAll();
-                renderSavings();
-            }
-
-            function renderRecovery() {
-                const cont = document.getElementById('recovery-list');
-                const data = recoveryData();
-                const grouped = {};
-                data.items.forEach(it => { if (!grouped[it.category]) grouped[it.category] = []; grouped[it.category].push(it); });
-                const cats = Object.keys(grouped).sort((a, b) => (catConfig[a]?.order || 99) - (catConfig[b]?.order || 99));
-                let html = '';
-                if (!lastSmoke) html += '<div class="empty-hint">🕐 开始戒烟后，这里将展示各项身体指标的恢复进度</div>';
-                cats.forEach(cat => {
-                    const items = grouped[cat];
-                    html += `<div class="recovery-category"><div class="recovery-category-title"><span class="cat-dot ${catConfig[cat]?.dot||''}"></span>${catConfig[cat]?.title||cat}</div>`;
-                    items.forEach(it => {
-                        const pct = it.display;
-                        const str = pct < 0.05 && pct > 0 ? '<0.1%' : (pct >= 99.995 ? '100%' : pct.toFixed(1) + '%');
-                        const desc = it.completed ? `<span class="item-benefit"><span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;background:#4ade80;border-radius:50%;font-size:10px;color:#fff;margin-right:4px;">✓</span>${it.benefit}</span>` : `<span class="item-desc">${it.desc} (当前进度: ${str})</span>`;
-                        html += `<div class="recovery-item${it.completed?' completed':''}"><div class="item-info"><span class="item-name">${it.name}</span>${desc}</div><div class="item-progress-area"><div class="mini-progress-bar"><div class="mini-progress-fill" style="width:${pct.toFixed(1)}%"></div></div><span class="item-percent">${str}</span></div></div>`;
-                    });
-                    html += '</div>';
+            cont.style.display = 'none';
+        };
+        document.getElementById('cancel-set').onclick = () => cont.style.display = 'none';
+    }
+    function renderCraving() {
+        document.getElementById('craving-total').innerText = cravingTotal;
+        const stats = getReasonStats();
+        const panel = document.getElementById('reason-panel');
+        panel.innerHTML = '';
+        ALL_REASONS.forEach(r => {
+            const count = stats[r]||0;
+            const chip = document.createElement('span');
+            chip.className = 'reason-chip'+(count>0?' has-count':'');
+            chip.innerHTML = r + (count>0?`<span class="chip-count">${count}</span>`:'');
+            chip.onclick = () => recordWithReason(r);
+            panel.appendChild(chip);
+        });
+        const skip = document.createElement('button');
+        skip.className = 'btn-cancel';
+        skip.textContent = '跳过';
+        skip.onclick = () => recordWithReason('');
+        panel.appendChild(skip);
+        panel.style.display = 'none';
+        const statsEl = document.getElementById('craving-stats');
+        const totalWithReason = Object.values(stats).reduce((s,v)=>s+v,0);
+        if(totalWithReason>0){
+            const sorted = Object.entries(stats).filter(([,v])=>v>0).sort(([,a],[,b])=>b-a);
+            const maxCount = sorted[0][1];
+            let html = '<div class="stats-header">📊 烟瘾触发统计</div><div class="bar-chart-container">';
+            sorted.forEach(([reason,count],idx)=>{
+                const height = Math.max(14, (count/maxCount)*70);
+                const color = BAR_COLORS[idx%BAR_COLORS.length];
+                html += `<div class="bar-item"><div class="bar-count">${count}</div><div class="bar" style="height:${height}px; background:${color};"></div><div class="bar-label">${reason}</div></div>`;
+            });
+            html+='</div>';
+            statsEl.innerHTML = html;
+        } else { statsEl.innerHTML = '<div class="no-stats">📊 暂无触发统计，点击上方按钮记录吧</div>'; }
+    }
+    function recordWithReason(reason) {
+        cravingTotal++;
+        cravingLogs.push({ ts: Date.now(), reason });
+        saveAll();
+        renderCraving();
+        document.getElementById('reason-panel').style.display = 'none';
+    }
+    document.getElementById('btn-craving').addEventListener('click', () => { document.getElementById('reason-panel').style.display = 'flex'; });
+    function renderSavings() {
+        const cont = document.getElementById('savings-content');
+        if (!lastSmoke) { cont.innerHTML = '<div class="empty-hint">⏳ 开始戒烟后，这里将显示您省下的金钱与健康</div>'; return; }
+        const s = savingsCalc();
+        cont.innerHTML = `<div class="savings-stats"><div class="savings-item"><div class="savings-value">${s.cigs}</div><div class="savings-label">少吸香烟（支）</div></div><div class="savings-item"><div class="savings-value">¥ ${s.cost}</div><div class="savings-label">节省金额（元）</div></div><div class="savings-item"><div class="savings-value">${s.tar}</div><div class="savings-label">少吸焦油（mg）</div></div><div class="savings-item"><div class="savings-value">${s.lifeDays}</div><div class="savings-label">延长寿命（天）</div></div></div><button class="btn-settings" id="btn-params">⚙️ 自定义吸烟数据</button>`;
+        document.getElementById('btn-params').onclick = showParamsDialog;
+    }
+    function showParamsDialog() {
+        let val = prompt('每天吸几支？', params.daily);
+        if (val && !isNaN(parseInt(val)) && parseInt(val)>0) params.daily = parseInt(val);
+        val = prompt('每包价格（元）？', params.packPrice);
+        if (val && !isNaN(parseFloat(val)) && parseFloat(val)>0) params.packPrice = parseFloat(val);
+        val = prompt('每包支数？', params.packSize);
+        if (val && !isNaN(parseInt(val)) && parseInt(val)>0) params.packSize = parseInt(val);
+        val = prompt('每支焦油（mg）？', params.tar);
+        if (val && !isNaN(parseFloat(val)) && parseFloat(val)>=0) params.tar = parseFloat(val);
+        saveAll();
+        renderSavings();
+    }
+    
+    // 新的渲染恢复明细函数：每个项目显示主名称 + 小字(益处描述+进度百分比)
+    function renderRecovery() {
+        const cont = document.getElementById('recovery-list');
+        const data = recoveryData();
+        const grouped = {};
+        data.items.forEach(it => { if(!grouped[it.category]) grouped[it.category]=[]; grouped[it.category].push(it); });
+        const cats = Object.keys(grouped).sort((a,b)=>(catConfig[a]?.order||99)-(catConfig[b]?.order||99));
+        let html = '';
+        if(!lastSmoke) {
+            html = '<div class="empty-hint">🕐 开始戒烟后，这里将展示各项身体指标的恢复进度</div>';
+        } else {
+            cats.forEach(cat => {
+                const items = grouped[cat];
+                html += `<div class="recovery-category"><div class="recovery-category-title"><span class="cat-dot ${catConfig[cat]?.dot||''}"></span>${catConfig[cat]?.title||cat}</div>`;
+                items.forEach(it => {
+                    const pct = it.display;
+                    const percentText = pct < 0.05 && pct > 0 ? '<0.1%' : (pct >= 99.995 ? '100%' : pct.toFixed(1) + '%');
+                    // 构建小字描述：如果是血液循环改善那项，显示“肺功能提升约30% (当前进度: XX%)”
+                    let subText = it.benefitDesc;
+                    if (it.name === '血液循环改善，肺功能增加三成') {
+                        subText = `肺功能提升约30% (当前进度: ${percentText})`;
+                    } else if (it.name === '冠心病的危险下降一半') {
+                        subText = `冠心病危险降至一半 (当前进度: ${percentText})`;
+                    } else {
+                        // 其他项目，如果benefitDesc存在，直接显示
+                        subText = it.benefitDesc;
+                    }
+                    // 若项目已完成，可额外显示勾选标志
+                    const completedBadge = it.completed ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;background:#4ade80;border-radius:50%;font-size:10px;color:#fff;margin-right:4px;">✓</span>` : '';
+                    html += `<div class="recovery-item${it.completed ? ' completed' : ''}">
+                                <div class="item-info">
+                                    <span class="item-name">${it.name}</span>
+                                    <div class="item-desc" style="margin-top: 4px;">${completedBadge}${subText}</div>
+                                </div>
+                                <div class="item-progress-area">
+                                    <div class="mini-progress-bar"><div class="mini-progress-fill" style="width:${pct.toFixed(1)}%"></div></div>
+                                    <span class="item-percent">${percentText}</span>
+                                </div>
+                            </div>`;
                 });
-                cont.innerHTML = html;
-            }
-
-            function renderAll() { 
-                renderTimer();
-                renderCraving();
-                renderCheckin();
+                html += '</div>';
+            });
+        }
+        cont.innerHTML = html;
+    }
+    
+    function renderAll() { renderTimer(); renderCraving(); renderCheckin(); renderSavings(); renderRecovery(); }
+    function startTimer() {
+        stopTimer();
+        if(lastSmoke) timer = setInterval(()=>{
+            if(lastSmoke){
+                const f = formatTimer(Math.max(0, Date.now()-lastSmoke)/1000);
+                const digits = document.querySelector('#timer-display .timer-digits');
+                if(digits) digits.innerHTML = `<span class="days-part">${f.days}天</span> ${f.h}:${f.m}:${f.s}`;
+                const overall = recoveryData();
+                document.getElementById('overall-percent').innerText = overall.overall.toFixed(1)+'%';
+                document.getElementById('overall-progress-bar').style.width = overall.overall.toFixed(1)+'%';
                 renderSavings();
+                renderCheckin();
                 renderRecovery();
             }
+        },1000);
+    }
+    function stopTimer() { if(timer){ clearInterval(timer); timer=null; } }
 
-            function startTimer() {
-                stopTimer();
-                if (lastSmoke) {
-                    timer = setInterval(() => {
-                        if (lastSmoke) {
-                            const f = formatTimer(Math.max(0, Date.now() - lastSmoke) / 1000);
-                            const digits = document.querySelector('#timer-display .timer-digits');
-                            if (digits) digits.innerHTML = `<span class="days-part">${f.days}天</span> ${f.h}:${f.m}:${f.s}`;
-                            const overallData = recoveryData();
-                            document.getElementById('overall-percent').textContent = overallData.overall.toFixed(1) + '%';
-                            document.getElementById('overall-progress-bar').style.width = overallData.overall.toFixed(1) + '%';
-                            renderSavings();
-                            // 跨天时刷新打卡视图（因为新的一天可能更新打卡按钮状态）
-                            renderCheckin();
-                        }
-                    }, 1000);
-                }
-            }
-            function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
+    document.getElementById('stats-calendar-btn').onclick = () => { currentCalendarYear = new Date().getFullYear(); currentCalendarMonth = new Date().getMonth(); showCalendarModal(); };
+    document.addEventListener('visibilitychange', () => { if(!document.hidden && lastSmoke) { renderCheckin(); renderSavings(); renderRecovery(); } });
+    window.addEventListener('beforeunload', () => { saveAll(); stopTimer(); });
 
-            document.getElementById('btn-checkin-reset').onclick = () => {
-                if (confirm('确定重置所有打卡记录吗？打卡进度将归零。')) { 
-                    checkinDates = [];
-                    saveAll();
-                    renderCheckin();
-                    renderAll();
-                }
-            };
-
-            document.addEventListener('visibilitychange', () => {
-                if (!document.hidden && lastSmoke) { renderCheckin(); renderSavings(); }
-            });
-            window.addEventListener('beforeunload', () => { saveAll(); stopTimer(); });
-
-            loadState();
-            renderAll();
-            if (lastSmoke) startTimer();
-        })();
-    </script>
+    loadState();
+    renderAll();
+    if(lastSmoke) startTimer();
+})();
+</script>
 </body>
 </html>
