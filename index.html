@@ -370,34 +370,52 @@
             gap: 8px;
             align-items: center;
         }
+        
+        /* ========== 打卡模块图标优化 (单行紧凑不换行，缩小圆圈) ========== */
         .checkin-grid {
             display: flex;
-            justify-content: space-between;
-            gap: 8px;
+            flex-direction: row;
+            flex-wrap: nowrap;         /* 强制单行，绝不换行 */
+            justify-content: flex-start;
+            gap: 6px;                  /* 缩小间距，确保一行展示所有圆圈 */
             margin-top: 16px;
-            flex-wrap: wrap;
+            overflow-x: auto;          /* 超宽可滑动，保证所有设备均能完整看到 */
+            padding-bottom: 6px;
+            scrollbar-width: thin;     /* 细滚动条，更精致 */
+            -webkit-overflow-scrolling: touch;
+        }
+        .checkin-grid::-webkit-scrollbar {
+            height: 3px;
+        }
+        .checkin-grid::-webkit-scrollbar-track {
+            background: #e8ece9;
+            border-radius: 10px;
+        }
+        .checkin-grid::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 10px;
         }
         .checkin-day {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
-            flex: 1;
-            min-width: 48px;
+            gap: 5px;
+            flex: 0 0 auto;            /* 固定宽度，不被拉伸，确保紧凑 */
+            min-width: 42px;           /* 与圆圈大小匹配，保证触摸区域 */
         }
         .checkin-circle {
-            width: 48px;
-            height: 48px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: #f0f3f1;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--text-muted);
             transition: all 0.2s;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
         }
         .checkin-circle.checked {
             background: #4ade80;
@@ -405,9 +423,10 @@
             box-shadow: 0 4px 10px rgba(74, 222, 128, 0.3);
         }
         .checkin-label {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: var(--text-secondary);
             font-weight: 500;
+            white-space: nowrap;
         }
         .btn-checkin {
             padding: 10px 24px;
@@ -634,8 +653,7 @@
     const set = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
     const remove = (k) => { try { localStorage.removeItem(k); } catch {} };
 
-    // 恢复明细数据 - 重新组织，每个项目包含主名称和对应的益处描述（小字）
-    // 为了满足新的排版：主名称下方显示益处描述 + 进度百分比的文字
+    // 恢复明细数据
     const recoveryItems = [
         { name: '血液中一氧化碳和氧气恢复正常水平', category: '心肺血液', maxDays: 1, benefitDesc: '血液携氧能力恢复' },
         { name: '心肌梗塞危险性降低', category: '心肺血液', maxDays: 1, benefitDesc: '心脏负担减轻' },
@@ -981,7 +999,6 @@
         renderSavings();
     }
     
-    // 新的渲染恢复明细函数：每个项目显示主名称 + 小字(益处描述+进度百分比)
     function renderRecovery() {
         const cont = document.getElementById('recovery-list');
         const data = recoveryData();
@@ -998,17 +1015,14 @@
                 items.forEach(it => {
                     const pct = it.display;
                     const percentText = pct < 0.05 && pct > 0 ? '<0.1%' : (pct >= 99.995 ? '100%' : pct.toFixed(1) + '%');
-                    // 构建小字描述：如果是血液循环改善那项，显示“肺功能提升约30% (当前进度: XX%)”
                     let subText = it.benefitDesc;
                     if (it.name === '血液循环改善，肺功能增加三成') {
                         subText = `肺功能提升约30% (当前进度: ${percentText})`;
                     } else if (it.name === '冠心病的危险下降一半') {
                         subText = `冠心病危险降至一半 (当前进度: ${percentText})`;
                     } else {
-                        // 其他项目，如果benefitDesc存在，直接显示
                         subText = it.benefitDesc;
                     }
-                    // 若项目已完成，可额外显示勾选标志
                     const completedBadge = it.completed ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;background:#4ade80;border-radius:50%;font-size:10px;color:#fff;margin-right:4px;">✓</span>` : '';
                     html += `<div class="recovery-item${it.completed ? ' completed' : ''}">
                                 <div class="item-info">
